@@ -16,5 +16,5 @@ videoRecorder.getRecorder().startRecording(oneInstance.getAsString(KEYS.PROJECT_
 
 //arg1 : path of the video, arg2 : name of the video  
   
-4. To stop recording  
+3. To stop recording  
   videoRecorder.stopRecording();
