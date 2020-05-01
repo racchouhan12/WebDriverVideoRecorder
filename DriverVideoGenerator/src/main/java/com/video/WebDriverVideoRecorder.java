@@ -1,7 +1,7 @@
-package com.video;
-
+package com.varian.utilities;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.bytedeco.javacpp.avcodec;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.OpenCVFrameConverter;
@@ -19,44 +19,52 @@ import java.util.LinkedList;
 import static org.bytedeco.javacpp.opencv_imgcodecs.cvLoadImage;
 
 public class WebDriverVideoRecorder implements Runnable {
-    private static WebDriver driver;
-    private static boolean isProcessing;
-    private static Thread thread;
-    private static String screenShotsPath = null;
-    private static String tmpScreenshot = null;
-    private static double frameRate = 1;
-    private static int videoBitRate = 9000;
+    private WebDriver driver;
+    private boolean isProcessing;
+    private Thread thread;
+    private String screenShotsPath = null;
+    private String tmpScreenshot = null;
+    private double frameRate = 2;
+    private int videoBitRate = 9000;
     private static int count = 1;
-    private static String videoName = "video.mp4";
+    private String videoName = "video";
+
+    private ThreadLocal<WebDriverVideoRecorder> threadedRecorder = new ThreadLocal<>();
 
     public WebDriverVideoRecorder(WebDriver driver) {
         this.driver = driver;
     }
 
-    private WebDriverVideoRecorder() {
-    }
-
-    private static void setTrue() {
+    private void setTrue() {
         isProcessing = true;
     }
 
     public void setFrameRate(double frameRate) {
-        this.frameRate = frameRate;
+        frameRate = frameRate;
     }
 
     public void setBitRate(int bitRate) {
-        this.videoBitRate = bitRate;
+        videoBitRate = bitRate;
     }
 
+    public WebDriverVideoRecorder getRecorder() {
+        return threadedRecorder.get();
+    }
+
+    public void setRecorder(WebDriverVideoRecorder videoRecorder) {
+        threadedRecorder.set(videoRecorder);
+    }
 
     public void startRecording(String videoPath, String videoName) {
-        screenShotsPath = videoPath;
-        tmpScreenshot = screenShotsPath + "/tmp/";
-        this.videoName = videoName;
+
+        getRecorder().screenShotsPath = videoPath;
+        getRecorder().tmpScreenshot = screenShotsPath + "/tmp_" + getRandomAlphaStringOfLen(10) + "/";
+        getRecorder().videoName = videoName;
         System.out.println("Screen shot path : " + tmpScreenshot);
         createFolder(screenShotsPath);
         createFolder(tmpScreenshot);
-        thread = new Thread(new WebDriverVideoRecorder(), "Image Capturing");
+        thread = new Thread(getRecorder(), "Image Capturing");
+        System.out.println("Thread count :" + Thread.currentThread().getName());
         setTrue();
         thread.start();
     }
@@ -113,7 +121,7 @@ public class WebDriverVideoRecorder implements Runnable {
     public void stopRecording() throws InterruptedException {
         isProcessing = false;
         thread.join();
-        convertJpgToMovie(tmpScreenshot, screenShotsPath + "/" + videoName + count + ".mp4");
+        convertJpgToMovie(tmpScreenshot, screenShotsPath + "/" + videoName + "_" + count + ".mp4");
         count = count + 1;
         deleteFiles();
     }
@@ -132,6 +140,10 @@ public class WebDriverVideoRecorder implements Runnable {
             }
         }
 
+    }
+
+    public static synchronized String getRandomAlphaStringOfLen(int length) {
+        return RandomStringUtils.randomAlphabetic(length);
     }
 
     @Override
