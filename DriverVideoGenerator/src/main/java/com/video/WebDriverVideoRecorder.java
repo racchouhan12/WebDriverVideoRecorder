@@ -40,7 +40,7 @@ public class WebDriverVideoRecorder implements Runnable {
     }
 
     public void setFrameRate(double frameRate) {
-        frameRate = frameRate;
+        this.frameRate = frameRate;
     }
 
     public void setBitRate(int bitRate) {
@@ -64,7 +64,6 @@ public class WebDriverVideoRecorder implements Runnable {
         createFolder(screenShotsPath);
         createFolder(tmpScreenshot);
         thread = new Thread(getRecorder(), "Image Capturing");
-        System.out.println("Thread count :" + Thread.currentThread().getName());
         setTrue();
         thread.start();
     }
