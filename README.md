@@ -6,10 +6,15 @@ To use this for now just include WebDriverVideoRecorder and dependencies in POM 
 In your test
 
 1. Create instance of WebDriverVideoRecorder  
-  WebDriverVideoRecorder videoRecorder = new WebDriverVideoRecorder(driver)  
+  WebDriverVideoRecorder videoRecorder = new WebDriverVideoRecorder(getDriver())  
   
-2. Call StartRecording method   
-videoRecorder.startRecording("D:/Project_name/testVideoRecorder", "video") //arg1 : path of the video, arg2 : name of the video  
+2. Set Recorder method   
+videoRecorder.setRecorder(videoRecorder); set the recorder
+ 
+3. Start recording
+videoRecorder.getRecorder().startRecording(oneInstance.getAsString(KEYS.PROJECT_PATH.name()) + "/verifyBasicSearch", "basicSearch");
+
+//arg1 : path of the video, arg2 : name of the video  
   
-3. To stop recording  
+4. To stop recording  
   videoRecorder.stopRecording();
