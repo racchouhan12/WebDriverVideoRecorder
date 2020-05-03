@@ -2,7 +2,8 @@ package com.automationtools;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.bytedeco.javacpp.avcodec;
+import org.bytedeco.ffmpeg.global.avcodec;
+
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.openqa.selenium.OutputType;
@@ -15,7 +16,7 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import static org.bytedeco.javacpp.opencv_imgcodecs.cvLoadImage;
+import static org.bytedeco.opencv.helper.opencv_imgcodecs.cvLoadImage;
 
 public class WebDriverVideoRecorder implements Runnable {
     private WebDriver driver;
@@ -27,6 +28,7 @@ public class WebDriverVideoRecorder implements Runnable {
     private int videoBitRate = 9000;
     private static int count = 1;
     private String videoName = "video";
+    private double videoQuality = 0.0;
 
     private ThreadLocal<WebDriverVideoRecorder> threadedRecorder = new ThreadLocal<>();
 
@@ -38,24 +40,56 @@ public class WebDriverVideoRecorder implements Runnable {
         isProcessing = true;
     }
 
+    /**
+     * Sets the frame rate default value is 2
+     * @param frameRate
+     */
+
     public void setFrameRate(double frameRate) {
         this.frameRate = frameRate;
     }
 
+    /**
+     * Sets the bit rate default value is 9000
+     * @param bitRate
+     */
     public void setBitRate(int bitRate) {
         videoBitRate = bitRate;
     }
 
+    /**
+     * Sets the quality of video for maximum quality set it to Zero<br/>
+     * default is Zero
+     * @param quality
+     */
+    public void setVideoQuality(double quality) {
+        this.videoQuality = quality;
+    }
+
+    /**
+     * Gets the threaded recorder instance, should be called always after setRecorder(WebDriverVideoRecorder videoRecorder)
+     * @return
+     */
     public WebDriverVideoRecorder getRecorder() {
         return threadedRecorder.get();
     }
+
+    /**
+     * Sets the recorder for the current thread instance
+     * @param videoRecorder  instance of WebDriverVideoRecorder
+     */
 
     public void setRecorder(WebDriverVideoRecorder videoRecorder) {
         threadedRecorder.set(videoRecorder);
     }
 
+    /**
+     * Start your recording by calling this method. <br/>
+     * Should be call by taking reference of recorder from getRecorder().
+     * @param videoPath  Path of the video to be stored.
+     * @param videoName  Name of the video without format.
+     */
     public void startRecording(String videoPath, String videoName) {
-
         getRecorder().screenShotsPath = videoPath;
         getRecorder().tmpScreenshot = screenShotsPath + "/tmp_" + getRandomAlphaStringOfLen(10) + "/";
         getRecorder().videoName = videoName;
@@ -67,7 +101,7 @@ public class WebDriverVideoRecorder implements Runnable {
         thread.start();
     }
 
-    public boolean createFolder(String nameOfFolder) {
+    private boolean createFolder(String nameOfFolder) {
         File file = new File(nameOfFolder);
         if (!file.exists()) {
             if (file.mkdir()) {
@@ -97,7 +131,7 @@ public class WebDriverVideoRecorder implements Runnable {
             recorder.setVideoCodec(avcodec.AV_CODEC_ID_MPEG4);
             recorder.setVideoBitrate(videoBitRate);
             recorder.setFormat("mp4");
-            recorder.setVideoQuality(0.0); // maximum quality
+            recorder.setVideoQuality(videoQuality); // maximum quality
             recorder.start();
             for (int i = 0; i < listOfFiles.size(); i++) {
                 recorder.record(grabberConverter.convert(cvLoadImage(listOfFiles.get(i))));
@@ -116,6 +150,10 @@ public class WebDriverVideoRecorder implements Runnable {
         FileUtils.copyFile(srcFile, destFile);
     }
 
+    /**
+     * Stops the recording should be call by taking reference of recorder from getRecorder()
+     * @throws InterruptedException
+     */
     public void stopRecording() throws InterruptedException {
         isProcessing = false;
         thread.join();
@@ -140,7 +178,7 @@ public class WebDriverVideoRecorder implements Runnable {
 
     }
 
-    public static synchronized String getRandomAlphaStringOfLen(int length) {
+    private static synchronized String getRandomAlphaStringOfLen(int length) {
         return RandomStringUtils.randomAlphabetic(length);
     }
 

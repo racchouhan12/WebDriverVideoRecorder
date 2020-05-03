@@ -22,7 +22,7 @@ public class TestWDVideoGen {
 		driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
 		driver.findElement(By.xpath("//body[@id='ysch']//li//li[1]//div[2]//h4[1]//a[1]")).click();
 		try {
-			videoRecorder.stopRecording();
+			videoRecorder.getRecorder().stopRecording();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

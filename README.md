@@ -35,7 +35,7 @@ videoRecorder.setRecorder(videoRecorder);
 videoRecorder.getRecorder().startRecording(oneInstance.getAsString(KEYS.PROJECT_PATH.name()) + "/verifyBasicSearch", "basicSearch");
   
 //To stop recording  
-videoRecorder.stopRecording();
+videoRecorder.getRecorder().stopRecording();
 ```
 
 
