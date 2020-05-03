@@ -8,7 +8,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 public class TestWDVideoGen {
 
 	public static void main(String[] args) {
-		System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver81.exe");
+		System.setProperty("webdriver.chrome.driver", "src/test/resources/chromedriver81.exe");
 		WebDriver driver = new ChromeDriver();
 		WebDriverVideoRecorder videoRecorder = new WebDriverVideoRecorder(driver);
 		videoRecorder.setRecorder(videoRecorder);

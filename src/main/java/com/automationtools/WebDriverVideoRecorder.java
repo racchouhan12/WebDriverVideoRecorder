@@ -2,8 +2,9 @@ package com.automationtools;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.bytedeco.ffmpeg.global.avcodec;
 
+
+import org.bytedeco.ffmpeg.global.avcodec;
 import org.bytedeco.javacv.FFmpegFrameRecorder;
 import org.bytedeco.javacv.OpenCVFrameConverter;
 import org.openqa.selenium.OutputType;
@@ -17,6 +18,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 
 import static org.bytedeco.opencv.helper.opencv_imgcodecs.cvLoadImage;
+
 
 public class WebDriverVideoRecorder implements Runnable {
     private WebDriver driver;
@@ -41,7 +43,7 @@ public class WebDriverVideoRecorder implements Runnable {
     }
 
     /**
-     * Sets the frame rate default value is 2
+     * Sets the frame rate default value is 2, if test is too short reduce frame rate to 1.
      * @param frameRate
      */
 
