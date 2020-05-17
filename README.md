@@ -17,13 +17,23 @@
   <a href="#license">License</a>
 </p>
 
+## An idea to create test execution recorder
+
+The idea to create this project came when there was a failure in a huge transaction E2E scenario and to debug the test script, a visual representation of whole process was needed.
+No doubt there are ways we can achieve this but the problem with all those ways is that one has to keep his/her execution window in focus and cannot use the system.
+This library helps you use your system while executing tests and recording the same.
+
+## Note 
+
+This library might not give you perfect results for some websites or application under test. There is still scope for improvement.
+Please contact the developers for any feedback.
 
 ## How To Use
 
 To use this for now just include WebDriverVideoRecorder and dependencies in POM into your project.
 
 Do the following in your test -
-```
+```java
 //Create instance of WebDriverVideoRecorder by passing WebDriver instance  
 WebDriverVideoRecorder videoRecorder = new WebDriverVideoRecorder(driver);
  
