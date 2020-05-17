@@ -35,6 +35,13 @@
             <artifactId>javacv-platform</artifactId>
             <version>1.5.3</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.testng/testng -->
+        <dependency>
+            <groupId>org.testng</groupId>
+            <artifactId>testng</artifactId>
+            <version>7.1.0</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 
